@@ -1,0 +1,12 @@
+service: Notes-API
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: Marlon
+  region: eu-north-1
+
+functions:
+  function1:
+    handler: index.handler
