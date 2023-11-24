@@ -1,6 +1,6 @@
-### NOTES-API
+# NOTES-API
 
-# Endpoints:
+### Endpoints:
   
   Notes:
   1. GET - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
