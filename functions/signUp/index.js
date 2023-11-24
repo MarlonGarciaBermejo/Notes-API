@@ -25,14 +25,13 @@ return { success: true, userId: userId};
 }
 
 }
-// test1 
 
 async function signup(username, password, firstname, lastname) {
 
     // check if username exists
     // if user exist, { success : false, message: 'Username already exists'}
    
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const userId = nanoid();
 
     const result = await createAccount(username, hashedPassword, userId, firstname, lastname);
