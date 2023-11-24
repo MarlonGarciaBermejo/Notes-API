@@ -9,8 +9,10 @@
   2. JSON Input:
 
      {
-  4. "username": "user",
-  5. "password": "password"
+  
+   "username": "user",
+   
+   "password": "password"
   6. "firstname": "firstname"
   7. "lastname": "lastname"
   8. } 
