@@ -10,19 +10,25 @@
 
      {
   
-   "username": "user",
+       "username": "user",
    
-   "password": "password"
-  6. "firstname": "firstname"
-  7. "lastname": "lastname"
-  8. } 
+       "password": "password"
+   
+       "firstname": "firstname"
+
+       "lastname": "lastname"
+
+     } 
   
   1. POST - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/auth/signin
   2. JSON Input:
-  3. {
-  4. "username": "user",
-  5. "password": "password"
-  6. }
+
+     {
+       "username": "user",
+
+       "password": "password"
+
+     }
        	
 		  
 		 
