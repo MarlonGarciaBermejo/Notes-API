@@ -6,7 +6,77 @@ provider:
   runtime: nodejs18.x
   profile: Marlon
   region: eu-north-1
+  iam:
+    role: arn:aws:iam::663618733165:role/Marlon
+
+plugins:
+  - serverless-webpack
+
+package: 
+  individually: true
 
 functions:
-  function1:
-    handler: index.handler
+  getNotes:
+    handler: functions/getNotes/index.handler
+    events:
+      - httpApi:
+          path: '/notes'
+          method: GET
+  postNote:
+    handler: functions/postNote/index.handler
+    events:
+      - httpApi:
+          path: '/notes'
+          method: POST
+  changeNote:
+    handler: functions/changeNote/index.handler
+    events:
+      - httpApi:
+          path: '/notes/{notesId}'
+          method: PUT
+  deleteNote:
+    handler: functions/deleteNote/index.handler
+    events:
+      - httpApi:
+          path: '/notes/{notesId}'
+          method: delete
+  signUp:
+    handler: functions/signUp/index.handler
+    events:
+      - httpApi:
+          path: '/auth/signup'
+          method: POST
+          
+  signIn: 
+    handler: functions/signIn/index.handler
+    events:
+      - httpApi:
+          path: '/auth/signin'
+          method: POST
+
+resources:  
+  Resources:
+    notesDb:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: notes-db
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    usersDb:
+      Type: AWS::DynamoDB::Table  
+      Properties:
+        TableName: accounts
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
