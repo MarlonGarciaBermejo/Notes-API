@@ -19,30 +19,14 @@ const postNote = async(event,context)=> {
 
     if (!note.title || !note.text){
         return sendResponse(400,{success: false, 
-            message: 'you need to provide a title AND a text'});
+            message: 'Please provide title and a text'});
     }
 
     if (Object.keys(note).length > 2) {
         return sendResponse(400, {
             success: false,
-            message: 'Only text and title are allowed'
+            message: 'Title and text only!'
         });
-    }
-
-    if (note.title.length > 50){
-        return sendResponse(400, {
-            success: false, message: 'title can\'t be longer than 50 chars '
-
-
-        })
-    }
-    if (note.text.length > 400){
-        return sendResponse(400, {
-            success: false, 
-            message: 'text can\'t be longer than 400 chars please send it in two notes'
-
-
-        })
     }
 
     const date = new Date().toISOString();
@@ -61,7 +45,7 @@ const postNote = async(event,context)=> {
 
     return sendResponse(200, {success: true, note})
 } catch (error){
-    return sendResponse(400, {success: false, message: "Bad request - please send in a note"})
+    return sendResponse(400, {success: false, message: "Couldn't save note"})
 }
     
     
