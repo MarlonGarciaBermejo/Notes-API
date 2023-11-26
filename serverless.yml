@@ -5,6 +5,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   profile: Marlon
+  memorySize: 3008
   region: eu-north-1
   iam:
     role: arn:aws:iam::663618733165:role/Marlon
@@ -32,13 +33,13 @@ functions:
     handler: functions/changeNote/index.handler
     events:
       - httpApi:
-          path: '/notes/{notesId}'
+          path: '/notes'
           method: PUT
   deleteNote:
     handler: functions/deleteNote/index.handler
     events:
       - httpApi:
-          path: '/notes/{notesId}'
+          path: '/notes'
           method: delete
   signUp:
     handler: functions/signUp/index.handler
