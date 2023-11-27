@@ -1,39 +1,38 @@
-import sendResponse from '../../responses';
+const { sendResponse } = require('../../responses');
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient();
 const { validateToken } = require('../middleware/auth');
 const middy = require('@middy/core');
 
-const getNotes = async (event, context) => {
-
-  if (event?.error && event?.error === '401') 
-  return sendResponse(401, {success : false, message: 'Invalid token'});
-  const username = event.username
-    
+const getNotes = async (event) => {
+  if (event?.error && event?.error === '401') {
+    return sendResponse(401, { success: false, message: 'Invalid token' });
+  }
   
-  
-  const{Items} = await db.scan({
-       TableName: 'notes-db',
-       FilterExpression: "#username = :username AND #status = :status",
-       ExpressionAttributeNames: {
-         "#username": "username",
-         "#status": "status"
-       },
-       ExpressionAttributeValues: { 
-          ":username": username,
-          ":status": true
-        }
-     }).promise();
-   
-   
-   
-   return sendResponse(200, {success : true, notes: Items});
-   
-   }
+  try {
+    const { Items } = await db.scan({
+      TableName: 'notes-db',
+      FilterExpression: '#userId = :userId',
+      ExpressionAttributeNames: {
+        '#userId': 'userId',
+      },
+      ExpressionAttributeValues: {
+        ':userId': userId,
+      },
+    }).promise();
+
+    return sendResponse(200, { success: true, notes: Items });
+  } catch (error) {
+    console.log(error);
+    return sendResponse(400, {
+      success: false,
+      message: 'Could not get notes',
+    });
+  }
+};
+
+const handler = middy(getNotes).use(validateToken);
+
+module.exports = { handler };
 
 
-
-const handler = middy(getNotes)
-.use(validateToken)
-
-module.exports = {handler};

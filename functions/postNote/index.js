@@ -1,57 +1,58 @@
 const AWS = require('aws-sdk');
-const { sendResponse } = require('../../responses'); 
-const db = new AWS.DynamoDB.DocumentClient();
-const { nanoid } = require('nanoid');
+const { sendResponse } = require('../../responses/index');
 const middy = require('@middy/core');
+const { nanoid } = require('nanoid');
 const { validateToken } = require('../middleware/auth');
+const db = new AWS.DynamoDB.DocumentClient();
 
+const postNote = async (event, context) => {
+  try {
+    const body = JSON.parse(event.body);
+    const { title, text } = body;
 
-const postNote = async(event,context)=> {   
+    const { userId, userName } = event.user; 
 
-    if(event?.error && event?.error === '401')
-    return sendResponse(401, {success: false, message: 'invalid token'});
-    const note = JSON.parse(event.body);
-
-
-    if(event?.error && event?.error === '401')
-    return sendResponse(401, {success: false, message: 'invalid token'});
-
-
-    if (!note.title || !note.text){
-        return sendResponse(400,{success: false, 
-            message: 'Please provide title and a text'});
+    if (!title || !text) {
+      return sendResponse(400, {
+        success: false,
+        message: 'Please provide both title and text for the note.',
+      });
     }
 
-    if (Object.keys(note).length > 2) {
-        return sendResponse(400, {
-            success: false,
-            message: 'Title and text only!'
-        });
-    }
+    const createdAt = new Date().toISOString();
+    const modifiedAt = new Date().toISOString();
 
-    const date = new Date().toISOString();
-    note.id = nanoid();
-    note.createdAt = `${date}`
-    note.modifiedAt = ""
-    note.username = event.username
-    note.isActive = true
+    const note = {
+      id: nanoid(),
+      userId: userId,
+      userName: userName,
+      title: title,
+      text: text,
+      createdAt: createdAt,
+      modifiedAt: modifiedAt,
+    };
 
-    try{
-
-    await db.put({
+    // Spara anteckningen i DynamoDB
+    await db
+      .put({
         TableName: 'notes-db',
-        Item: note
-    }).promise()
+        Item: note,
+      })
+      .promise();
 
-    return sendResponse(200, {success: true, note})
-} catch (error){
-    return sendResponse(400, {success: false, message: "Couldn't save note"})
-}
-    
-    
-    }
+    return sendResponse(200, {
+      success: true,
+      note: note,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return sendResponse(500, {
+      success: false,
+      message: 'Internal Server Error. Failed to save the note.',
+    });
+  }
+};
 
-const handler = middy(postNote)
-.use(validateToken)
+const handler = middy(postNote).use(validateToken);
 
-module.exports = {handler};
+module.exports = { handler };
