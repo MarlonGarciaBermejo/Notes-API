@@ -5,8 +5,39 @@
   Notes:
   1. GET - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
   2. POST - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
+
+  {
+  
+   "title": "",
+   
+   "text": ""
+
+   } 
+
+
   3. PUT - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
+
+  {
+  
+   "id": "",
+   
+   "title": ""
+   
+   "text": ""
+
+   } 
+
   4. DELETE - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
+
+  {
+  
+   "id": "",
+   
+   "title": ""
+   
+   "text": ""
+
+   } 
 
    Auth:
   1. POST - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/auth/signup
@@ -34,6 +65,8 @@
        "password": "password"
 
       }
+
+     
        	
 		  
 		 
