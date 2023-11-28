@@ -4,7 +4,7 @@ const db = new AWS.DynamoDB.DocumentClient();
 const { validateToken } = require('../middleware/auth');
 const middy = require('@middy/core');
 
-const getNotes = async (event) => {
+const getNotes = async (event, context) => {
   if (event?.error && event?.error === '401') {
     return sendResponse(401, { success: false, message: 'Invalid token' });
   }
@@ -12,12 +12,12 @@ const getNotes = async (event) => {
   try {
     const { Items } = await db.scan({
       TableName: 'notes-db',
-      FilterExpression: '#userId = :userId',
-      ExpressionAttributeNames: {
-        '#userId': 'userId',
+      FilterExpression: '#username = :username',
+      ExpressionAttributeNames: { 
+        '#username': 'username',
       },
       ExpressionAttributeValues: {
-        ':userId': userId,
+        ':username': username,
       },
     }).promise();
 

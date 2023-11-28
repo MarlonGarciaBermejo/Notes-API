@@ -7,10 +7,12 @@ const db = new AWS.DynamoDB.DocumentClient();
 
 const postNote = async (event, context) => {
   try {
+
     const body = JSON.parse(event.body);
     const { title, text } = body;
+    const username = event.username || 'DefaultUsername';
+    const userId = event.id || 'DefaultUserId';
 
-    const { userId, userName } = event.user; 
 
     if (!title || !text) {
       return sendResponse(400, {
@@ -25,7 +27,7 @@ const postNote = async (event, context) => {
     const note = {
       id: nanoid(),
       userId: userId,
-      userName: userName,
+      username: username,
       title: title,
       text: text,
       createdAt: createdAt,
@@ -45,10 +47,9 @@ const postNote = async (event, context) => {
       note: note,
     });
   } catch (error) {
-    console.error('Error:', error);
-    return sendResponse(500, {
+    return sendResponse(401, {
       success: false,
-      message: 'Internal Server Error. Failed to save the note.',
+      message: 'Failed to save the note.',
     });
   }
 };
