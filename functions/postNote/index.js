@@ -6,11 +6,12 @@ const { validateToken } = require('../middleware/auth');
 const db = new AWS.DynamoDB.DocumentClient();
 
 const postNote = async (event, context) => {
+ 
   try {
     const body = JSON.parse(event.body);
     const { title, text } = body;
-    const username = event.username || 'DefaultUsername';
-    const userId = event.id || 'DefaultUserId';
+    const username = event.username 
+    const userId = event.id
 
     if (!title || !text) {
       return sendResponse(400, {
