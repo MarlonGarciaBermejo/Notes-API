@@ -7,12 +7,10 @@ const db = new AWS.DynamoDB.DocumentClient();
 
 const postNote = async (event, context) => {
   try {
-
     const body = JSON.parse(event.body);
     const { title, text } = body;
     const username = event.username || 'DefaultUsername';
     const userId = event.id || 'DefaultUserId';
-
 
     if (!title || !text) {
       return sendResponse(400, {
@@ -34,7 +32,7 @@ const postNote = async (event, context) => {
       modifiedAt: modifiedAt,
     };
 
-    // Spara anteckningen i DynamoDB
+    // Save the note to DynamoDB
     await db
       .put({
         TableName: 'notes-db',
@@ -47,10 +45,17 @@ const postNote = async (event, context) => {
       note: note,
     });
   } catch (error) {
-    return sendResponse(401, {
-      success: false,
-      message: 'Failed to save the note.',
-    });
+    if (error instanceof SyntaxError) {
+      return sendResponse(400, {
+        success: false,
+        message: 'Invalid JSON format in the request body.',
+      });
+    } else {
+      return sendResponse(500, {
+        success: false,
+        message: 'Unknown error occurred.',
+      });
+    }
   }
 };
 

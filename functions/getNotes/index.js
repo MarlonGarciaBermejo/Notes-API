@@ -10,6 +10,8 @@ const getNotes = async (event, context) => {
   }
   
   try {
+    const username = event.username || 'DefaultUsername'; 
+
     const { Items } = await db.scan({
       TableName: 'notes-db',
       FilterExpression: '#username = :username',
@@ -24,9 +26,9 @@ const getNotes = async (event, context) => {
     return sendResponse(200, { success: true, notes: Items });
   } catch (error) {
     console.log(error);
-    return sendResponse(400, {
+    return sendResponse(500, {
       success: false,
-      message: 'Could not get notes',
+      message: 'Internal Server Error. Could not get notes.',
     });
   }
 };
@@ -34,5 +36,3 @@ const getNotes = async (event, context) => {
 const handler = middy(getNotes).use(validateToken);
 
 module.exports = { handler };
-
-
