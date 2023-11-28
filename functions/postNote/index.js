@@ -6,12 +6,11 @@ const { validateToken } = require('../middleware/auth');
 const db = new AWS.DynamoDB.DocumentClient();
 
 const postNote = async (event, context) => {
- 
   try {
     const body = JSON.parse(event.body);
     const { title, text } = body;
     const username = event.username 
-    const userId = event.id
+    const userId = event.id 
 
     if (!title || !text) {
       return sendResponse(400, {
@@ -34,16 +33,15 @@ const postNote = async (event, context) => {
     };
 
     // Save the note to DynamoDB
-    await db
-      .put({
-        TableName: 'notes-db',
-        Item: note,
-      })
-      .promise();
+    await db.put({
+      TableName: 'notes-db',
+      Item: note,
+    }).promise();
 
     return sendResponse(200, {
       success: true,
       note: note,
+      message: 'Note created successfully.',
     });
   } catch (error) {
     if (error instanceof SyntaxError) {
@@ -63,3 +61,4 @@ const postNote = async (event, context) => {
 const handler = middy(postNote).use(validateToken);
 
 module.exports = { handler };
+
