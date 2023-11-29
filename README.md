@@ -39,9 +39,7 @@
   
    "id": "",
    
-   "title": ""
-   
-   "text": ""
+   "username": ""
 
    } 
 
