@@ -10,7 +10,7 @@ const deleteNote = async (event, context) => {
     }
 
     const requestBody = JSON.parse(event.body);
-    const { id, username } = requestBody; 
+    const { id, username } = requestBody;
 
     try {
         const { Item: noteToDelete } = await db.get({
@@ -23,30 +23,16 @@ const deleteNote = async (event, context) => {
         }
 
         if (username !== noteToDelete.username) {
-            return sendResponse(403, { success: false, message: "You do not have permission to delete this note" });
+            return sendResponse(404, { success: false, message: "You do not have permission to delete this note" });
         }
-
-        const date = new Date().toISOString();
-        const modifiedAt = `${date}`;
-
-        await db.update({
-            TableName: 'notes-db',
-            Key: { id },
-            ReturnValues: 'ALL_NEW',
-            UpdateExpression: "SET #isActive = :isActive, #modifiedAt = :modifiedAt",
-            ExpressionAttributeValues: {
-                ":isActive": false,
-                ":modifiedAt": modifiedAt
-            },
-            ExpressionAttributeNames: {
-                "#isActive": "isActive",
-                "#modifiedAt": "modifiedAt"
-            }
-        }).promise();
 
         await db.delete({
             TableName: 'notes-db',
-            Key: { id }
+            Key: { id },
+            ConditionExpression: 'username = :username',
+            ExpressionAttributeValues: {
+                ':username': username
+            }
         }).promise();
 
         return sendResponse(200, { message: "The note is deleted id: " + id });
