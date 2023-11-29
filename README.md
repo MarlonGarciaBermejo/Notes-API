@@ -2,7 +2,7 @@
 
   ## Endpoints:
   
-  Notes:
+### Notes:
   1. GET - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
   2. POST - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/notes
 
@@ -43,7 +43,7 @@
 
    } 
 
-   Auth:
+###  Auth:
   1. POST - https://qfwv8mb1k6.execute-api.eu-north-1.amazonaws.com/auth/signup
      
      JSON Input:
