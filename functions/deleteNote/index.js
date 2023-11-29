@@ -5,6 +5,7 @@ const middy = require('@middy/core');
 const { validateToken } = require('../middleware/auth');
 
 const deleteNote = async (event, context) => {
+    console.log('Event object:', event);
     if (event?.error && event?.error === '401') {
         return sendResponse(401, { success: false, message: 'invalid token' });
     }
@@ -37,6 +38,7 @@ const deleteNote = async (event, context) => {
 
         return sendResponse(200, { message: "The note is deleted id: " + id });
     } catch (error) {
+        console.error("Error deleting note", error);
         return sendResponse(500, { success: false, message: "could not delete" });
     }
 };
